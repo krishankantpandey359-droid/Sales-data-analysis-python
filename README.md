@@ -22,7 +22,7 @@ This project analyzes sales data using Python to gain insights into total sales,
 ## 📸 Output
  
 ### 📊 Sales by Region
-![Sales Chart](sales_chart.png)
+![Sales Chart](20260425_151906.jpg)
  
 ## 👩‍💻 Author
 Srishti Pandey
