@@ -1,0 +1,9 @@
+Date,Temperature,Humidity,Rainfall,Weather
+2024-01-01,22,60,0,Sunny
+2024-01-02,24,65,2,Rainy
+2024-01-03,23,58,0,Cloudy
+2024-01-04,25,70,5,Rainy
+2024-01-05,26,75,10,Rainy
+2024-01-06,27,68,0,Sunny
+2024-01-07,28,72,1,Cloudy
+ 
