@@ -1,27 +1,26 @@
-# Sales Data Analysis using Python
+# Weather Data Analysis & Visualization 🌦️
  
-This project analyzes sales data using Python libraries like Pandas and Matplotlib.
+## 📌 Project Overview
+This project analyzes weather data using Python to understand temperature trends, rainfall patterns, and weather distribution.
  
-## Features
-- Calculate total sales
-- Perform region-wise analysis
-- Visualize data using bar charts
- 
-## Technologies Used
+## 🛠 Tools Used
 - Python
 - Pandas
 - Matplotlib
  
-## Output
-(See the attached image for visualization)
+## 📊 Key Insights
+- Temperature shows a rising trend over time  
+- Rainfall patterns analyzed  
+- Weather distribution visualized using pie chart  
  
-## Author
-Srishti Pandey
- # Sales-data-analysis-python
-Sales Data Analysis using Python
-## Output
+## 📈 Output
  
-![Sales Chart](20260425_151804.jpg)
+### Temperature Trend
+![Temperature](temperature_trend.png)
  
-![Chart 2](20260425_151906.jpg)
+### Rainfall Analysis
+![Rainfall](rainfall_analysis.png)
+ 
+### Weather Distribution
+![Weather](weather_distribution.png)
  
