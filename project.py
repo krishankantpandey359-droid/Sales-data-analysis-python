@@ -1,37 +1,73 @@
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 
 
-# Load the dataset from the same directory as this script.
-data_path = Path(__file__).resolve().with_name("sales_data.csv")
-df = pd.read_csv(data_path)
+DATA_PATH = Path(__file__).resolve().with_name("sales_data.csv")
+REQUIRED_COLUMNS = {"Date", "Product", "Region", "Sales", "Profit"}
 
-required_columns = {"Product", "Region", "Sales", "Profit"}
-missing_columns = required_columns.difference(df.columns)
-if missing_columns:
-    raise ValueError(f"Dataset is missing required columns: {', '.join(sorted(missing_columns))}")
 
-# Overall performance
-total_sales = df["Sales"].sum()
-total_profit = df["Profit"].sum()
-print(f"Total Sales: {total_sales:,.2f}")
-print(f"Total Profit: {total_profit:,.2f}")
+def load_sales_data(path=DATA_PATH):
+    """Load sales data and reject incomplete or invalid records."""
+    frame = pd.read_csv(path)
+    missing = REQUIRED_COLUMNS.difference(frame.columns)
+    if missing:
+        raise ValueError(
+            f"Dataset is missing required columns: {', '.join(sorted(missing))}"
+        )
+    if frame.empty:
+        raise ValueError("Sales dataset contains no records.")
 
-# Sales breakdowns
-region_sales = df.groupby("Region")["Sales"].sum().sort_values(ascending=False)
-product_sales = df.groupby("Product")["Sales"].sum().sort_values(ascending=False)
+    frame = frame.copy()
+    for column in ("Product", "Region"):
+        if frame[column].isna().any() or frame[column].astype(str).str.strip().eq("").any():
+            raise ValueError(f"Dataset contains missing {column} values.")
 
-print("\nSales by Region:")
-print(region_sales.to_string())
+    frame["Date"] = pd.to_datetime(frame["Date"], errors="coerce")
+    if frame["Date"].isna().any():
+        raise ValueError("Date column contains invalid or missing dates.")
 
-print("\nSales by Product:")
-print(product_sales.to_string())
+    for column in ("Sales", "Profit"):
+        frame[column] = pd.to_numeric(frame[column], errors="coerce")
+        if frame[column].isna().any() or not np.isfinite(frame[column]).all():
+            raise ValueError(f"{column} column must contain finite numeric values.")
 
-# Visualize sales by region
-ax = region_sales.plot(kind="bar", title="Sales by Region", rot=0)
-ax.set_xlabel("Region")
-ax.set_ylabel("Sales")
-plt.tight_layout()
-plt.show()
+    return frame
+
+
+def summarize_sales(frame):
+    """Return overall totals and sales grouped by region and product."""
+    return {
+        "total_sales": frame["Sales"].sum(),
+        "total_profit": frame["Profit"].sum(),
+        "region_sales": frame.groupby("Region")["Sales"].sum().sort_values(ascending=False),
+        "product_sales": frame.groupby("Product")["Sales"].sum().sort_values(ascending=False),
+    }
+
+
+def main():
+    df = load_sales_data()
+    summary = summarize_sales(df)
+
+    print(f"Total Sales: {summary['total_sales']:,.2f}")
+    print(f"Total Profit: {summary['total_profit']:,.2f}")
+
+    print("\\nSales by Region:")
+    print(summary["region_sales"].to_string())
+
+    print("\\nSales by Product:")
+    print(summary["product_sales"].to_string())
+
+    ax = summary["region_sales"].plot(
+        kind="bar", title="Sales by Region", rot=0
+    )
+    ax.set_xlabel("Region")
+    ax.set_ylabel("Sales")
+    plt.tight_layout()
+    plt.show()
+
+
+if __name__ == "__main__":
+    main()
