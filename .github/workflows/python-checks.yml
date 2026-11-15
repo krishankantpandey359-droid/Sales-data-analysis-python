@@ -1,0 +1,28 @@
+name: Python checks
+
+on:
+  pull_request:
+    paths:
+      - "project.py"
+      - "sales_data.csv"
+      - "tests/**"
+      - ".github/workflows/python-checks.yml"
+  push:
+    branches: [main]
+    paths:
+      - "project.py"
+      - "sales_data.csv"
+      - "tests/**"
+      - ".github/workflows/python-checks.yml"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install --upgrade pip pandas matplotlib pytest
+      - run: python -m compileall -q project.py tests
+      - run: pytest -q
