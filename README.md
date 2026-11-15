@@ -1,29 +1,39 @@
-# 📊 Sales Data Analysis using Python
- 
-## 📌 Project Overview
-This project analyzes sales data using Python to gain insights into total sales, profit, and region-wise performance.
- 
-## 🛠️ Tools Used
+# Sales Data Analysis using Python
+
+## Project Overview
+
+This project uses a small sales dataset to calculate overall sales and profit, compare sales across regions and products, and visualize regional sales.
+
+## Tools
+
 - Python
 - Pandas
 - Matplotlib
- 
-## 📊 Key Insights
-- Total sales and total profit calculated
-- Region-wise sales analysis performed
-- Category-wise sales comparison
-- Data visualized using bar charts
- 
-## 📂 Files Included
-- project.py
-- sales_data.csv
-- sales_chart.png
- 
-## 📸 Output
- 
-### 📊 Sales by Region
-![Sales Chart](20260425_151906.jpg)
-![Sales Chart](20260425_151804.jpg)
- 
-## 👩‍💻 Author
-Srishti Pandey
+
+## Analysis
+
+- Calculates total sales and total profit.
+- Groups sales by region.
+- Compares sales by product.
+- Displays a bar chart of sales by region.
+
+## Dataset
+
+The included `sales_data.csv` contains 6 records and the columns `Date`, `Product`, `Region`, `Sales`, and `Profit`. The dataset is small, so treat the results as a demonstration rather than broad business conclusions.
+
+## Files
+
+- `project.py`: analysis and visualization script.
+- `sales_data.csv`: input dataset.
+- `20260425_151906.jpg` and `20260425_151804.jpg`: existing output screenshots.
+
+## Run
+
+Install the dependencies and run:
+
+```bash
+pip install pandas matplotlib
+python project.py
+```
+
+The script prints the sales and profit summaries and opens the regional sales chart.
