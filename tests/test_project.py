@@ -47,6 +47,7 @@ def test_analysis_script_runs_headlessly():
 )
 def test_loader_rejects_invalid_values(tmp_path, column, bad_value, message):
     frame = pd.read_csv(DATA)
+    frame[column] = frame[column].astype(object)
     frame.loc[0, column] = bad_value
     path = tmp_path / "invalid.csv"
     frame.to_csv(path, index=False)
