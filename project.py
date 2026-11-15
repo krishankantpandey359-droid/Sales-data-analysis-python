@@ -81,10 +81,10 @@ def main():
     print(f"Total Sales: {results['total_sales']:,.2f}")
     print(f"Total Profit: {results['total_profit']:,.2f}")
 
-    print("\\nSales by Region:")
+    print("\nSales by Region:")
     print(results["region_sales"].to_string())
 
-    print("\\nSales by Product:")
+    print("\nSales by Product:")
     print(results["product_sales"].to_string())
 
     ax = results["region_sales"].plot(kind="bar", title="Sales by Region", rot=0)
