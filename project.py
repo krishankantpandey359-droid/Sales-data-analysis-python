@@ -35,6 +35,8 @@ def load_sales_data(data_path):
         frame["Date"] = pd.to_datetime(frame["Date"], errors="raise")
     except (TypeError, ValueError) as exc:
         raise ValueError("Dataset contains invalid Date values.") from exc
+    if frame["Date"].isna().any():
+        raise ValueError("Dataset contains missing Date values.")
 
     for column in ("Sales", "Profit"):
         try:
