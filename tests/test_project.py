@@ -60,6 +60,7 @@ def test_analysis_script_runs_headlessly_and_prints_clean_headings():
         ("Profit", np.inf, "non-finite Profit"),
         ("Sales", -np.inf, "non-finite Sales"),
         ("Date", "not-a-date", "invalid Date"),
+        ("Date", np.nan, "missing Date"),
         ("Region", "", "missing Region"),
         ("Product", "   ", "missing Product"),
         ("Sales", np.nan, "non-finite Sales"),
