@@ -38,6 +38,15 @@ The project downloads the CSV to data/walmart_weekly_sales.csv on first run. The
 └── tests/test_sales_analysis.py
 ```
 
+## Data provenance and interpretation
+
+- The analysis downloads a CSV from the public GitHub mirror linked above when the local file is absent.
+- The linked mirror is the retrieval location used by this project. It is not represented as an official Walmart data endpoint.
+- The repository does not currently establish the original publisher's licence or a canonical, immutable release identifier. Check the source terms before redistributing the dataset.
+- The loader validates the complete downloaded CSV before publishing it to the data directory. It checks the required schema, dates, finite numeric values, non-negative sales, positive whole-number store IDs, binary holiday flags, and duplicate store-date keys.
+- The project preserves the source field names. Temperature units, fuel-price currency, CPI base/definition, and unemployment measurement conventions are not independently documented in this repository. Treat those units and definitions as source-dependent rather than assuming them.
+- Store-week sales are the observation unit. A store's total is the sum of its available weekly records, so compare totals alongside the number of reported weeks.
+
 ## Features
 
 - Validates required columns, missing values, dates, numeric values, finite values, non-negative sales, positive whole-number store IDs, holiday flags, and duplicate store-date records.
