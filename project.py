@@ -58,6 +58,10 @@ def analyze_sales(frame):
         "total_profit": float(frame["Profit"].sum()),
         "region_sales": frame.groupby("Region")["Sales"].sum().sort_values(ascending=False),
         "product_sales": frame.groupby("Product")["Sales"].sum().sort_values(ascending=False),
+        "daily_sales": frame.groupby("Date")["Sales"].sum().sort_index(),
+        "product_region_sales": frame.pivot_table(
+            index="Product", columns="Region", values="Sales", aggfunc="sum", fill_value=0
+        ),
     }
 
 
