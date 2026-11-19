@@ -1,5 +1,7 @@
 """Reusable data loading, validation, and analysis functions."""
+import os
 from pathlib import Path
+from tempfile import NamedTemporaryFile
 from urllib.request import urlretrieve
 
 import numpy as np
@@ -17,7 +19,25 @@ def download_dataset(path: str | Path = DEFAULT_DATA_PATH) -> Path:
     destination = Path(path)
     destination.parent.mkdir(parents=True, exist_ok=True)
     if not destination.exists():
-        urlretrieve(DATA_URL, destination)
+        # Download to a temporary file in the same directory, then atomically
+        # replace the destination. Interrupted downloads never leave a partial
+        # CSV at the path used by the analysis pipeline.
+        with NamedTemporaryFile(
+            prefix=f".{destination.name}.",
+            suffix=".download",
+            dir=destination.parent,
+            delete=False,
+        ) as temporary:
+            temporary_path = Path(temporary.name)
+        try:
+            urlretrieve(DATA_URL, temporary_path)
+            if not temporary_path.is_file() or temporary_path.stat().st_size == 0:
+                raise ValueError("Dataset download produced an empty file.")
+            # Fail before publishing a corrupt/non-CSV response.
+            pd.read_csv(temporary_path, nrows=5)
+            os.replace(temporary_path, destination)
+        finally:
+            temporary_path.unlink(missing_ok=True)
     return destination
 
 
