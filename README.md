@@ -1,107 +1,119 @@
 # Sales Data Analysis using Python
 
-## Project overview
+An end-to-end exploratory data analysis project using the Walmart Weekly Sales Dataset. The project includes data validation, store-level summaries, calendar-month aggregation, holiday comparisons, correlation analysis, reproducible charts, CSV exports, a Markdown report, and an interactive Streamlit dashboard.
 
-This project analyzes a small six-row sales dataset. It calculates total sales and profit, summarizes sales by region and product, and creates a regional sales chart.
+## Business questions
 
-The dataset is intentionally small. Treat the results as a coding and analysis demonstration, not as statistically representative business performance.
+- Which stores recorded the highest total weekly sales?
+- How did store-week sales aggregate across calendar months?
+- How did sales differ between holiday-flagged and non-holiday observations?
+- How were weekly sales associated with temperature, fuel price, CPI, and unemployment?
 
 ## Dataset
 
-The included `sales_data.csv` contains six records and five columns:
+| Attribute | Description |
+|---|---|
+| Observations | 6,435 store-week records |
+| Stores | 45 |
+| Period | February 2010 to October 2012 |
+| Measure | Weekly_Sales |
+| Other fields | Store, Date, Holiday_Flag, Temperature, Fuel_Price, CPI, Unemployment |
 
-- `Date`
-- `Product`
-- `Region`
-- `Sales`
-- `Profit`
+Dataset source mirror: [Walmart Weekly Sales Dataset CSV](https://github.com/ogamircs/kaggle_walmart/blob/master/Walmart.csv).
 
-The script validates the required columns, non-empty product and region labels, valid dates, and finite numeric sales/profit values before analysis.
-
-## Verified totals in the included dataset
-
-| Metric | Value |
-|---|---:|
-| Records | 6 |
-| Total sales | 205,000 |
-| Total profit | 33,000 |
-
-Sales by region:
-
-| Region | Sales |
-|---|---:|
-| North | 85,000 |
-| South | 55,000 |
-| West | 45,000 |
-| East | 20,000 |
-
-Sales by product:
-
-| Product | Sales |
-|---|---:|
-| Laptop | 95,000 |
-| Mobile | 65,000 |
-| Tablet | 45,000 |
-
-These totals describe only the six rows in the included sample.
+The project downloads the CSV to data/walmart_weekly_sales.csv on first run. The dataset is not committed to this repository. The source is a public GitHub mirror, not a direct official Walmart endpoint.
 
 ## Project structure
 
 ```text
-Sales-data-analysis-python/
-├── project.py
-├── sales_data.csv
+.
+├── .github/workflows/tests.yml
+├── app.py
+├── data/
+├── outputs/
 ├── requirements.txt
-├── tests/
-│   └── test_project.py
-└── .github/
-    └── workflows/
-        └── tests.yml
+├── requirements-dev.txt
+├── scripts/run_analysis.py
+├── src/sales_analysis.py
+└── tests/test_sales_analysis.py
 ```
 
-## Setup and run
+## Data provenance and interpretation
 
-Use Python 3.10 or newer.
+- The analysis downloads a CSV from the public GitHub mirror linked above when the local file is absent.
+- The linked mirror is the retrieval location used by this project. It is not represented as an official Walmart data endpoint.
+- The repository does not currently establish the original publisher's licence or a canonical, immutable release identifier. Check the source terms before redistributing the dataset.
+- The loader validates the complete downloaded CSV before publishing it to the data directory. It checks the required schema, dates, finite numeric values, non-negative sales, positive whole-number store IDs, binary holiday flags, and duplicate store-date keys.
+- The project preserves the source field names. Temperature units, fuel-price currency, CPI base/definition, and unemployment measurement conventions are not independently documented in this repository. Treat those units and definitions as source-dependent rather than assuming them.
+- Store-week sales are the observation unit. A store's total is the sum of its available weekly records, so compare totals alongside the number of reported weeks.
+
+## Features
+
+- Validates required columns, missing values, dates, numeric values, finite values, non-negative sales, positive whole-number store IDs, holiday flags, and duplicate store-date records.
+- Calculates store totals, average and median weekly sales, standard deviation, peak week sales, observation counts, and rank.
+- Aggregates weekly observations by calendar month.
+- Compares holiday and non-holiday store-week observations.
+- Calculates Pearson correlations for weekly sales and available numeric factors.
+- Exports analysis tables, charts, and a Markdown summary.
+- Provides a Streamlit dashboard with store/date filters, KPIs, interactive charts, a data table, and CSV download.
+- Runs automated tests and code-quality checks through GitHub Actions.
+
+## Setup
+
+Python 3.10 or newer is recommended.
 
 ```bash
 python -m venv .venv
+pip install -r requirements-dev.txt
 ```
 
-Activate the environment, then install dependencies:
+## Run
+
+Generate analysis outputs:
 
 ```bash
-pip install -r requirements.txt
+python scripts/run_analysis.py
 ```
 
-Run the analysis:
+Launch the dashboard:
 
 ```bash
-python project.py
+streamlit run app.py
 ```
 
-Use another CSV path:
-
-```bash
-python project.py --data path/to/your_sales.csv
-```
-
-Save the regional chart to a file:
-
-```bash
-python project.py --save-chart output/region-sales.png
-```
-
-## Run tests
+Run tests:
 
 ```bash
 pytest -q
 ```
 
-The tests check dataset totals and breakdowns, headless script execution, missing columns, empty files, missing labels, invalid dates, non-numeric values, infinite values, and missing files.
+Run lint checks:
 
-## Limitations and next steps
+```bash
+ruff check src scripts app.py tests
+```
 
-- Six records are insufficient for reliable business forecasting or general conclusions.
-- The dataset has no customer, order, quantity, discount, or cost breakdown, so customer behaviour and margin drivers cannot be analyzed.
-- Profit is treated as a supplied field. The project does not independently validate its accounting definition.
-- Useful extensions include a larger time series, monthly trends, profit margin, product-region cross-tabulation, and data visualizations with clear units.
+## Generated outputs
+
+- outputs/store_performance.csv
+- outputs/monthly_sales.csv
+- outputs/holiday_comparison.csv
+- outputs/correlation_matrix.csv
+- outputs/summary.md
+- outputs/charts/top_10_stores.png
+- outputs/charts/monthly_sales_trend.png
+- outputs/charts/holiday_comparison.png
+
+## Methodology and limitations
+
+- Each row represents one store's weekly sales observation.
+- Monthly totals sum weekly observations by the calendar month of each observation date. They are not audited accounting-month revenue.
+- Holiday comparisons are descriptive. They do not prove that holidays caused sales to change.
+- Correlation measures association, not causation.
+- The dataset has no product, customer, transaction, quantity, discount, inventory, cost, or profit fields. This project does not calculate profit, margin, product performance, or customer behaviour.
+- The Walmart Weekly Sales Dataset is historical and must not be presented as a current Walmart performance report.
+- Some stores may have different numbers of reported weeks. Store totals should be interpreted alongside observation counts.
+
+## Technology stack
+
+Python, pandas, NumPy, Matplotlib, Plotly, Streamlit, pytest, Ruff, and GitHub Actions.

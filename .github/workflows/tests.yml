@@ -1,27 +1,45 @@
-name: Python tests
+name: Sales Data Analysis Python CI
 
 on:
   push:
-    branches: [main, "audit/**"]
+    branches: [main, "rebuild/**"]
   pull_request:
     branches: [main]
-  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
-  test:
+  quality:
     runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: .
+      MPLBACKEND: Agg
+
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-      - name: Run tests
-        env:
-          MPLBACKEND: Agg
+          pip install -r requirements-dev.txt
+
+      - name: Compile Python files
+        run: python -m compileall -q src scripts app.py tests
+
+      - name: Run Ruff lint checks
+        run: ruff check src scripts app.py tests
+
+      - name: Run automated tests
         run: pytest -q
+
+      - name: Run full analysis pipeline
+        run: python scripts/run_analysis.py

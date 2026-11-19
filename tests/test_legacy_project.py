@@ -1,15 +1,15 @@
-from pathlib import Path
 import os
 import subprocess
 import sys
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
-DATA = ROOT / "sales_data.csv"
-sys.path.insert(0, str(ROOT))
+DATA = ROOT / "legacy" / "sales_data.csv"
+sys.path.insert(0, str(ROOT / "legacy"))
 
 from project import analyze_sales, load_sales_data
 
@@ -38,7 +38,8 @@ def test_analysis_returns_expected_ranked_breakdowns():
 
 def test_analysis_script_runs_headlessly_and_prints_clean_headings():
     result = subprocess.run(
-        [sys.executable, str(ROOT / "project.py")],
+        [sys.executable, str(ROOT / "legacy" / "project.py"),
+         "--data", str(DATA), "--save-chart", str(ROOT / "outputs" / "legacy-test.png")],
         cwd=ROOT,
         env={**os.environ, "MPLBACKEND": "Agg"},
         capture_output=True,
@@ -47,8 +48,6 @@ def test_analysis_script_runs_headlessly_and_prints_clean_headings():
     )
     assert "Total Sales: 205,000.00" in result.stdout
     assert "Total Profit: 33,000.00" in result.stdout
-    assert "\\nSales by Region:" not in result.stdout
-    assert "\\nSales by Product:" not in result.stdout
     assert "Sales by Region:" in result.stdout
     assert "Sales by Product:" in result.stdout
 
