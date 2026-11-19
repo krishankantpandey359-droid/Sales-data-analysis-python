@@ -44,9 +44,9 @@ def save_holiday_chart(summary):
 
 
 def write_summary(metrics, stores, holiday):
-    report = f"""# Sales Data Analysis Summary
+    report = f"""# Sales Data Analysis using Python
 
-## Dataset overview
+## Walmart Weekly Sales Dataset
 
 - Records: {metrics["records"]:,}
 - Stores: {metrics["stores"]}
@@ -74,7 +74,7 @@ def write_summary(metrics, stores, holiday):
 def main():
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     CHART_DIR.mkdir(parents=True, exist_ok=True)
-    data = load_data(ROOT / "data" / "Walmart.csv")
+    data = load_data(ROOT / "data" / "walmart_weekly_sales.csv")
     stores = store_performance(data)
     months = monthly_sales(data)
     holiday = holiday_comparison(data)
