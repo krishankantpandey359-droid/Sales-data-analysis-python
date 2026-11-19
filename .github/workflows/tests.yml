@@ -1,4 +1,4 @@
-name: Python tests
+name: Walmart Store Sales Analysis CI
 on:
   push:
     branches: [main, "rebuild/**"]
