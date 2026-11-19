@@ -25,13 +25,13 @@ st.set_page_config(
 st.title("Sales Data Analysis using Python")
 st.caption(
     "Exploratory analysis of historical weekly store sales. "
-    "This is not a current Walmart performance report."
+    "Historical data only, not a current Walmart performance report."
 )
 
 
 @st.cache_data
 def get_data():
-    return load_data(ROOT / "data" / "Walmart.csv")
+    return load_data(ROOT / "data" / "walmart_weekly_sales.csv")
 
 
 try:
@@ -136,7 +136,7 @@ st.dataframe(store_summary, use_container_width=True, hide_index=True)
 st.download_button(
     "Download filtered data",
     filtered.to_csv(index=False).encode("utf-8"),
-    file_name="filtered_walmart_weekly_sales.csv",
+    file_name="sales_data_analysis_filtered.csv",
     mime="text/csv",
 )
 st.caption(
