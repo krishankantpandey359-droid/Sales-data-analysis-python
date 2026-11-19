@@ -1,12 +1,15 @@
 """Generate reproducible CSV, chart, and Markdown analysis outputs."""
 from pathlib import Path
-import matplotlib
-matplotlib.use("Agg")
+
 import matplotlib.pyplot as plt
 
 from src.sales_analysis import (
-    correlation_matrix, headline_metrics, holiday_comparison,
-    load_data, monthly_sales, store_performance,
+    correlation_matrix,
+    headline_metrics,
+    holiday_comparison,
+    load_data,
+    monthly_sales,
+    store_performance,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -18,7 +21,11 @@ def save_store_chart(summary):
     top = summary.head(10).sort_values("Total_Sales")
     fig, ax = plt.subplots(figsize=(10, 5))
     ax.barh(top["Store"].astype(str), top["Total_Sales"])
-    ax.set(title="Top 10 stores by total sales", xlabel="Total weekly sales", ylabel="Store")
+    ax.set(
+        title="Top 10 stores by total sales",
+        xlabel="Total weekly sales",
+        ylabel="Store",
+    )
     fig.tight_layout()
     fig.savefig(CHART_DIR / "top_10_stores.png", dpi=160)
     plt.close(fig)
@@ -28,7 +35,11 @@ def save_monthly_chart(summary):
     fig, ax = plt.subplots(figsize=(12, 5))
     ax.plot(summary["Month"], summary["Total_Sales"], marker="o")
     ax.tick_params(axis="x", rotation=60)
-    ax.set(title="Monthly sales trend", xlabel="Calendar month", ylabel="Total weekly sales")
+    ax.set(
+        title="Monthly sales trend",
+        xlabel="Calendar month",
+        ylabel="Total weekly sales",
+    )
     fig.tight_layout()
     fig.savefig(CHART_DIR / "monthly_sales_trend.png", dpi=160)
     plt.close(fig)
@@ -37,7 +48,11 @@ def save_monthly_chart(summary):
 def save_holiday_chart(summary):
     fig, ax = plt.subplots(figsize=(8, 5))
     ax.bar(summary["Holiday_Type"], summary["Average_Weekly_Sales"])
-    ax.set(title="Average sales: holiday vs non-holiday", xlabel="Week type", ylabel="Average store-week sales")
+    ax.set(
+        title="Average sales: holiday vs non-holiday",
+        xlabel="Week type",
+        ylabel="Average store-week sales",
+    )
     fig.tight_layout()
     fig.savefig(CHART_DIR / "holiday_comparison.png", dpi=160)
     plt.close(fig)
@@ -89,7 +104,10 @@ def main():
     save_monthly_chart(months)
     save_holiday_chart(holiday)
     write_summary(metrics, stores, holiday)
-    print(f"Analysis completed: {metrics['records']:,} records across {metrics['stores']} stores.")
+    print(
+        f"Analysis completed: {metrics['records']:,} records "
+        f"across {metrics['stores']} stores."
+    )
 
 
 if __name__ == "__main__":
