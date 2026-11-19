@@ -206,3 +206,44 @@ def test_download_dataset_rejects_empty_response_without_publishing(tmp_path, mo
 
     assert not destination.exists()
     assert list(destination.parent.glob(".*.download")) == []
+
+
+
+def test_download_dataset_publishes_valid_csv_atomically(tmp_path, monkeypatch):
+    destination = tmp_path / "data" / "walmart.csv"
+    valid = pd.DataFrame({
+        "Store": [1],
+        "Date": ["05-02-2010"],
+        "Weekly_Sales": [123.0],
+        "Holiday_Flag": [0],
+        "Temperature": [40.0],
+        "Fuel_Price": [2.5],
+        "CPI": [200.0],
+        "Unemployment": [8.0],
+    })
+
+    def fake_download(_url, output_path):
+        valid.to_csv(output_path, index=False)
+
+    monkeypatch.setattr("src.sales_analysis.urlretrieve", fake_download)
+
+    result = download_dataset(destination)
+
+    assert result == destination
+    assert destination.is_file()
+    assert pd.read_csv(destination).shape == (1, 8)
+    assert list(destination.parent.glob(".*.download")) == []
+
+
+def test_download_dataset_keeps_existing_file_without_network_call(tmp_path, monkeypatch):
+    destination = tmp_path / "data" / "existing.csv"
+    destination.parent.mkdir(parents=True)
+    destination.write_text("existing data", encoding="utf-8")
+
+    def unexpected_download(*_args):
+        raise AssertionError("Existing dataset should not be downloaded again.")
+
+    monkeypatch.setattr("src.sales_analysis.urlretrieve", unexpected_download)
+
+    assert download_dataset(destination) == destination
+    assert destination.read_text(encoding="utf-8") == "existing data"
