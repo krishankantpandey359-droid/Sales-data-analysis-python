@@ -2,7 +2,7 @@
 
 ## Project overview
 
-This project analyzes a small six-row sales dataset. It calculates total sales and profit, summarizes sales by region and product, and creates a regional sales chart.
+This project analyzes a small six-row sales dataset. It calculates total sales and profit, summarizes sales by region, product, date, and product-region combination, and creates a regional sales chart.
 
 The dataset is intentionally small. Treat the results as a coding and analysis demonstration, not as statistically representative business performance.
 
@@ -43,7 +43,7 @@ Sales by product:
 | Mobile | 65,000 |
 | Tablet | 45,000 |
 
-These totals describe only the six rows in the included sample.
+Daily sales and the product-region cross-tabulation are also available from the analysis function. These totals describe only the six rows in the included sample.
 
 ## Project structure
 
@@ -97,7 +97,7 @@ python project.py --save-chart output/region-sales.png
 pytest -q
 ```
 
-The tests check dataset totals and breakdowns, headless script execution, missing columns, empty files, missing labels, invalid dates, non-numeric values, infinite values, and missing files.
+The tests check dataset totals, regional and product breakdowns, daily sales, product-region totals, headless script execution, missing columns, empty files, missing labels, invalid dates, non-numeric values, infinite values, and missing files.
 
 ## Limitations and next steps
 
