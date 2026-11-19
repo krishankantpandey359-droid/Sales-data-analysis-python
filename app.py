@@ -5,6 +5,7 @@ ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 
 import plotly.express as px
+import pandas as pd
 import streamlit as st
 
 from src.sales_analysis import (
@@ -59,7 +60,7 @@ filtered = df[df["Store"].isin(selected_stores)].copy()
 if isinstance(selected_dates, (tuple, list)):
     if len(selected_dates) == 2:
         start_date, end_date = selected_dates
-        filtered = filtered[filtered["Date"].between(start_date, end_date)]
+        filtered = filtered[filtered["Date"].between(pd.Timestamp(start_date), pd.Timestamp(end_date))]
     elif len(selected_dates) == 1:
         filtered = filtered[filtered["Date"].dt.date == selected_dates[0]]
 else:
