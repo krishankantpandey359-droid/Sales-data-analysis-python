@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 
 DATA_URL = "https://raw.githubusercontent.com/ogamircs/kaggle_walmart/master/Walmart.csv"
-DEFAULT_DATA_PATH = Path("data/Walmart.csv")
+DEFAULT_DATA_PATH = Path("data/walmart_weekly_sales.csv")
 REQUIRED_COLUMNS = ["Store", "Date", "Weekly_Sales", "Holiday_Flag", "Temperature", "Fuel_Price", "CPI", "Unemployment"]
 NUMERIC_COLUMNS = ["Store", "Weekly_Sales", "Holiday_Flag", "Temperature", "Fuel_Price", "CPI", "Unemployment"]
 CORRELATION_COLUMNS = ["Weekly_Sales", "Temperature", "Fuel_Price", "CPI", "Unemployment"]
@@ -56,7 +56,7 @@ def validate_data(data: pd.DataFrame) -> None:
 
 
 def load_data(path: str | Path = DEFAULT_DATA_PATH, download: bool = True) -> pd.DataFrame:
-    """Load, normalize, validate, and sort the weekly sales dataset."""
+    """Load, normalize, validate, and sort the Walmart Weekly Sales Dataset."""
     source_path = Path(path)
     if not source_path.exists():
         if not download:
