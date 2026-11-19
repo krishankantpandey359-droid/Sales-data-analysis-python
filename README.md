@@ -1,107 +1,27 @@
-# Sales Data Analysis using Python
+# Walmart Store Sales Analysis
 
-## Project overview
+End-to-end analysis of historical weekly sales across 45 Walmart stores.
 
-This project analyzes a small six-row sales dataset. It calculates total sales and profit, summarizes sales by region and product, and creates a regional sales chart.
-
-The dataset is intentionally small. Treat the results as a coding and analysis demonstration, not as statistically representative business performance.
+## Questions
+- Which stores lead or lag in total weekly sales?
+- How do sales change month to month?
+- How do average and median store-week sales compare in designated holiday and non-holiday weeks?
+- How are sales associated with temperature, fuel price, CPI and unemployment?
 
 ## Dataset
+6,435 observations, 45 stores, February 2010 to October 2012. Fields: Store, Date, Weekly_Sales, Holiday_Flag, Temperature, Fuel_Price, CPI, Unemployment.
 
-The included `sales_data.csv` contains six records and five columns:
+CSV source mirror: https://github.com/ogamircs/kaggle_walmart/blob/master/Walmart.csv. The CSV downloads to data/Walmart.csv on first run. It is not committed to this repository.
 
-- `Date`
-- `Product`
-- `Region`
-- `Sales`
-- `Profit`
+## Limits
+This is weekly store-level data, not transaction or product data. It has no costs, discounts, inventory, quantity or profit fields, so this project does not calculate profit or margin. Holiday comparisons and correlations are descriptive, not causal. This is historical data, not a current Walmart report.
 
-The script validates the required columns, non-empty product and region labels, valid dates, and finite numeric sales/profit values before analysis.
-
-## Verified totals in the included dataset
-
-| Metric | Value |
-|---|---:|
-| Records | 6 |
-| Total sales | 205,000 |
-| Total profit | 33,000 |
-
-Sales by region:
-
-| Region | Sales |
-|---|---:|
-| North | 85,000 |
-| South | 55,000 |
-| West | 45,000 |
-| East | 20,000 |
-
-Sales by product:
-
-| Product | Sales |
-|---|---:|
-| Laptop | 95,000 |
-| Mobile | 65,000 |
-| Tablet | 45,000 |
-
-These totals describe only the six rows in the included sample.
-
-## Project structure
-
-```text
-Sales-data-analysis-python/
-├── project.py
-├── sales_data.csv
-├── requirements.txt
-├── tests/
-│   └── test_project.py
-└── .github/
-    └── workflows/
-        └── tests.yml
-```
-
-## Setup and run
-
-Use Python 3.10 or newer.
-
+## Run
 ```bash
-python -m venv .venv
-```
-
-Activate the environment, then install dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
-Run the analysis:
-
-```bash
-python project.py
-```
-
-Use another CSV path:
-
-```bash
-python project.py --data path/to/your_sales.csv
-```
-
-Save the regional chart to a file:
-
-```bash
-python project.py --save-chart output/region-sales.png
-```
-
-## Run tests
-
-```bash
+pip install -r requirements-dev.txt
+python scripts/run_analysis.py
+streamlit run app.py
 pytest -q
 ```
 
-The tests check dataset totals and breakdowns, headless script execution, missing columns, empty files, missing labels, invalid dates, non-numeric values, infinite values, and missing files.
-
-## Limitations and next steps
-
-- Six records are insufficient for reliable business forecasting or general conclusions.
-- The dataset has no customer, order, quantity, discount, or cost breakdown, so customer behaviour and margin drivers cannot be analyzed.
-- Profit is treated as a supplied field. The project does not independently validate its accounting definition.
-- Useful extensions include a larger time series, monthly trends, profit margin, product-region cross-tabulation, and data visualizations with clear units.
+The analysis writes CSV summaries, a Markdown summary and PNG charts to outputs/. The Streamlit app provides store and date filters, KPI cards, charts, tables and CSV download.
