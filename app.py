@@ -18,11 +18,11 @@ from src.sales_analysis import (
 )
 
 st.set_page_config(
-    page_title="Walmart Store Sales Analysis using Python",
+    page_title="Sales Data Analysis using Python",
     page_icon="📊",
     layout="wide",
 )
-st.title("Walmart Store Sales Analysis using Python")
+st.title("Sales Data Analysis using Python")
 st.caption(
     "Exploratory analysis of historical weekly store sales. "
     "This is not a current Walmart performance report."
