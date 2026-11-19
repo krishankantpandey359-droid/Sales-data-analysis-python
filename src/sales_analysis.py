@@ -47,7 +47,25 @@ def store_performance(df):
     return out
 
 def monthly_sales(df):
-    return df.groupby("Month",as_index=False).agg(Total_Sales=("Weekly_Sales","sum"),Average_Weekly_Sales=("Weekly_Sales","mean"),Store_Weeks=("Weekly_Sales","size")).sort_values("Month").reset_index(drop=True)
+    """Aggregate sales by calendar month, deriving Month from Date when needed."""
+    data = df.copy()
+    if "Month" not in data.columns:
+        if "Date" not in data.columns:
+            raise ValueError("monthly_sales requires either a Month or Date column.")
+        dates = pd.to_datetime(data["Date"], errors="coerce")
+        if dates.isna().any():
+            raise ValueError("Date contains invalid values; cannot derive monthly sales.")
+        data["Month"] = dates.dt.to_period("M").astype(str)
+    return (
+        data.groupby("Month", as_index=False)
+        .agg(
+            Total_Sales=("Weekly_Sales", "sum"),
+            Average_Weekly_Sales=("Weekly_Sales", "mean"),
+            Store_Weeks=("Weekly_Sales", "size"),
+        )
+        .sort_values("Month")
+        .reset_index(drop=True)
+    )
 
 def holiday_comparison(df):
     d=df.assign(Holiday_Type=np.where(df.Holiday_Flag.eq(1),"Holiday week","Non-holiday week"))
