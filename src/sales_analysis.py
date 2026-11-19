@@ -1,6 +1,7 @@
 """Reusable data loading, validation, and analysis functions."""
 from pathlib import Path
 from urllib.request import urlretrieve
+
 import numpy as np
 import pandas as pd
 
@@ -151,7 +152,7 @@ def headline_metrics(data: pd.DataFrame) -> dict[str, int | float | str]:
     if data.empty:
         raise ValueError("Cannot calculate headline metrics for an empty dataset.")
     return {
-        "records": int(len(data)),
+        "records": len(data),
         "stores": int(data["Store"].nunique()),
         "total_sales": float(data["Weekly_Sales"].sum()),
         "average_weekly_sales": float(data["Weekly_Sales"].mean()),
