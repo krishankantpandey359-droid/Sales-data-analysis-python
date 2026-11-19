@@ -46,6 +46,7 @@ def download_dataset(path: str | Path = DEFAULT_DATA_PATH) -> Path:
             temporary_path.unlink(missing_ok=True)
     return destination
 
+
 def validate_data(data: pd.DataFrame) -> None:
     """Raise ValueError when required data-quality rules are violated."""
     missing_columns = sorted(set(REQUIRED_COLUMNS) - set(data.columns))
