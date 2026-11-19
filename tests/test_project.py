@@ -30,6 +30,7 @@ def test_analysis_returns_expected_ranked_breakdowns():
     result = analyze_sales(frame)
     assert result["total_sales"] == 205000
     assert result["total_profit"] == 33000
+    assert result["profit_margin_percent"] == pytest.approx(33000 / 205000 * 100)
     assert result["region_sales"].index.tolist() == ["North", "South", "West", "East"]
     assert result["product_sales"].to_dict() == {
         "Laptop": 95000, "Mobile": 65000, "Tablet": 45000
@@ -95,3 +96,10 @@ def test_loader_rejects_empty_dataset(tmp_path):
 def test_loader_rejects_missing_file(tmp_path):
     with pytest.raises(FileNotFoundError, match="not found"):
         load_sales_data(tmp_path / "does-not-exist.csv")
+
+
+def test_profit_margin_is_none_when_total_sales_is_zero():
+    frame = load_sales_data(DATA).copy()
+    frame["Sales"] = 0
+    result = analyze_sales(frame)
+    assert result["profit_margin_percent"] is None
