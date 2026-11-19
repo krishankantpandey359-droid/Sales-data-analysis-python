@@ -56,6 +56,10 @@ def analyze_sales(frame):
     return {
         "total_sales": float(frame["Sales"].sum()),
         "total_profit": float(frame["Profit"].sum()),
+        "profit_margin_percent": (
+            float(frame["Profit"].sum() / frame["Sales"].sum() * 100)
+            if frame["Sales"].sum() != 0 else None
+        ),
         "region_sales": frame.groupby("Region")["Sales"].sum().sort_values(ascending=False),
         "product_sales": frame.groupby("Product")["Sales"].sum().sort_values(ascending=False),
     }
