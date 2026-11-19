@@ -1,4 +1,4 @@
-# Walmart Store Sales Analysis using Python
+# Sales Data Analysis using Python
 
 An end-to-end exploratory data analysis project using historical Walmart weekly store sales data. The project includes data validation, business-focused summaries, visualizations, an interactive Streamlit dashboard, automated tests, and GitHub Actions CI.
 
