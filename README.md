@@ -1,6 +1,6 @@
 # Sales Data Analysis using Python
 
-An end-to-end exploratory data analysis project using historical Walmart weekly store sales data. The project includes data validation, store-level summaries, calendar-month aggregation, holiday comparisons, correlation analysis, reproducible charts, CSV exports, a Markdown report, and an interactive Streamlit dashboard.
+An end-to-end exploratory data analysis project using the Walmart Weekly Sales Dataset. The project includes data validation, store-level summaries, calendar-month aggregation, holiday comparisons, correlation analysis, reproducible charts, CSV exports, a Markdown report, and an interactive Streamlit dashboard.
 
 ## Business questions
 
@@ -19,9 +19,9 @@ An end-to-end exploratory data analysis project using historical Walmart weekly 
 | Measure | Weekly_Sales |
 | Other fields | Store, Date, Holiday_Flag, Temperature, Fuel_Price, CPI, Unemployment |
 
-Dataset source mirror: [Walmart weekly sales CSV](https://github.com/ogamircs/kaggle_walmart/blob/master/Walmart.csv).
+Dataset source mirror: [Walmart Weekly Sales Dataset CSV](https://github.com/ogamircs/kaggle_walmart/blob/master/Walmart.csv).
 
-The project downloads the CSV to data/Walmart.csv on first run. The dataset is not committed to this repository. The source is a public GitHub mirror, not a direct official Walmart endpoint.
+The project downloads the CSV to data/walmart_weekly_sales.csv on first run. The dataset is not committed to this repository. The source is a public GitHub mirror, not a direct official Walmart endpoint.
 
 ## Project structure
 
@@ -102,7 +102,7 @@ ruff check src scripts app.py tests
 - Holiday comparisons are descriptive. They do not prove that holidays caused sales to change.
 - Correlation measures association, not causation.
 - The dataset has no product, customer, transaction, quantity, discount, inventory, cost, or profit fields. This project does not calculate profit, margin, product performance, or customer behaviour.
-- The data is historical and must not be presented as a current Walmart performance report.
+- The Walmart Weekly Sales Dataset is historical and must not be presented as a current Walmart performance report.
 - Some stores may have different numbers of reported weeks. Store totals should be interpreted alongside observation counts.
 
 ## Technology stack
