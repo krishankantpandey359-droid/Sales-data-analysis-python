@@ -1,9 +1,12 @@
 """Unit tests for data validation and sales-analysis functions."""
+from pathlib import Path
+
 import pandas as pd
 import pytest
 
 from src.sales_analysis import (
     correlation_matrix,
+    download_dataset,
     headline_metrics,
     holiday_comparison,
     load_data,
@@ -171,3 +174,35 @@ def test_load_data_rejects_invalid_date(tmp_path):
 def test_load_data_raises_for_missing_file_without_download(tmp_path):
     with pytest.raises(FileNotFoundError):
         load_data(tmp_path / "missing.csv", download=False)
+
+
+
+def test_download_dataset_rejects_invalid_csv_without_publishing(tmp_path, monkeypatch):
+    destination = tmp_path / "data" / "walmart.csv"
+
+    def fake_download(_url, output_path):
+        pd.DataFrame({"unexpected": [1, 2]}).to_csv(output_path, index=False)
+
+    monkeypatch.setattr("src.sales_analysis.urlretrieve", fake_download)
+
+    with pytest.raises(ValueError, match="Missing required columns"):
+        download_dataset(destination)
+
+    assert not destination.exists()
+    assert list(destination.parent.glob("*.download")) == []
+    assert list(destination.parent.glob(".*.download")) == []
+
+
+def test_download_dataset_rejects_empty_response_without_publishing(tmp_path, monkeypatch):
+    destination = tmp_path / "data" / "walmart.csv"
+
+    def fake_download(_url, output_path):
+        Path(output_path).write_text("", encoding="utf-8")
+
+    monkeypatch.setattr("src.sales_analysis.urlretrieve", fake_download)
+
+    with pytest.raises(ValueError, match="empty file"):
+        download_dataset(destination)
+
+    assert not destination.exists()
+    assert list(destination.parent.glob(".*.download")) == []
