@@ -1,11 +1,9 @@
+"""Interactive dashboard for the Walmart Weekly Sales Dataset."""
 from pathlib import Path
-import sys
+from urllib.error import URLError
 
-ROOT = Path(__file__).resolve().parent
-sys.path.insert(0, str(ROOT))
-
-import plotly.express as px
 import pandas as pd
+import plotly.express as px
 import streamlit as st
 
 from src.sales_analysis import (
@@ -17,6 +15,8 @@ from src.sales_analysis import (
     store_performance,
 )
 
+ROOT = Path(__file__).resolve().parent
+
 st.set_page_config(
     page_title="Sales Data Analysis using Python",
     page_icon="📊",
@@ -24,7 +24,7 @@ st.set_page_config(
 )
 st.title("Sales Data Analysis using Python")
 st.caption(
-    "Exploratory analysis of historical weekly store sales. "
+    "Exploratory analysis of the Walmart Weekly Sales Dataset. "
     "Historical data only, not a current Walmart performance report."
 )
 
@@ -36,8 +36,12 @@ def get_data():
 
 try:
     df = get_data()
-except Exception as exc:
+except (OSError, ValueError, URLError, pd.errors.ParserError) as exc:
     st.error(f"Dataset loading failed: {exc}")
+    st.info(
+        "Check your internet connection or place the source CSV at "
+        "data/walmart_weekly_sales.csv, then rerun the dashboard."
+    )
     st.stop()
 
 st.sidebar.header("Filters")
@@ -60,14 +64,22 @@ filtered = df[df["Store"].isin(selected_stores)].copy()
 if isinstance(selected_dates, (tuple, list)):
     if len(selected_dates) == 2:
         start_date, end_date = selected_dates
-        filtered = filtered[filtered["Date"].between(pd.Timestamp(start_date), pd.Timestamp(end_date))]
+        filtered = filtered[
+            filtered["Date"].between(pd.Timestamp(start_date), pd.Timestamp(end_date))
+        ]
     elif len(selected_dates) == 1:
-        filtered = filtered[filtered["Date"].dt.date == selected_dates[0]]
+        filtered = filtered[
+            filtered["Date"].dt.date == selected_dates[0]
+        ]
 else:
-    filtered = filtered[filtered["Date"].dt.date == selected_dates]
+    filtered = filtered[
+        filtered["Date"].dt.date == selected_dates
+    ]
 
 if filtered.empty:
-    st.warning("No records match the selected filters. Change the store or date filters.")
+    st.warning(
+        "No records match the selected filters. Change the store or date filters."
+    )
     st.stop()
 
 metrics = headline_metrics(filtered)
@@ -75,7 +87,10 @@ kpi1, kpi2, kpi3, kpi4 = st.columns(4)
 kpi1.metric("Filtered records", f"{metrics['records']:,}")
 kpi2.metric("Stores", metrics["stores"])
 kpi3.metric("Total weekly sales", f"{metrics['total_sales']:,.2f}")
-kpi4.metric("Average store-week sales", f"{metrics['average_weekly_sales']:,.2f}")
+kpi4.metric(
+    "Average store-week sales",
+    f"{metrics['average_weekly_sales']:,.2f}",
+)
 
 store_summary = store_performance(filtered)
 monthly_summary = monthly_sales(filtered)
