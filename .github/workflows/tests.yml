@@ -1,4 +1,4 @@
-name: Walmart Store Sales Analysis CI
+name: Sales Data Analysis Python CI
 on:
   push:
     branches: [main, "rebuild/**"]
