@@ -15,13 +15,11 @@ CORRELATION_COLUMNS = ["Weekly_Sales", "Temperature", "Fuel_Price", "CPI", "Unem
 
 
 def download_dataset(path: str | Path = DEFAULT_DATA_PATH) -> Path:
-    """Download the public CSV mirror when the local dataset is missing."""
+    """Download and validate the public CSV mirror before publishing it."""
     destination = Path(path)
     destination.parent.mkdir(parents=True, exist_ok=True)
     if not destination.exists():
-        # Download to a temporary file in the same directory, then atomically
-        # replace the destination. Interrupted downloads never leave a partial
-        # CSV at the path used by the analysis pipeline.
+        # Keep the temporary file beside the destination so os.replace is atomic.
         with NamedTemporaryFile(
             prefix=f".{destination.name}.",
             suffix=".download",
@@ -33,13 +31,20 @@ def download_dataset(path: str | Path = DEFAULT_DATA_PATH) -> Path:
             urlretrieve(DATA_URL, temporary_path)
             if not temporary_path.is_file() or temporary_path.stat().st_size == 0:
                 raise ValueError("Dataset download produced an empty file.")
-            # Fail before publishing a corrupt/non-CSV response.
-            pd.read_csv(temporary_path, nrows=5)
+
+            try:
+                downloaded = pd.read_csv(temporary_path)
+            except (OSError, pd.errors.EmptyDataError, pd.errors.ParserError) as exc:
+                raise ValueError("Downloaded dataset is not a readable CSV file.") from exc
+
+            # Validate the full file before replacing the destination. A valid
+            # HTTP response is not enough: mirrors sometimes return HTML/error
+            # pages or incomplete CSV content with a successful status code.
+            validate_data(downloaded)
             os.replace(temporary_path, destination)
         finally:
             temporary_path.unlink(missing_ok=True)
     return destination
-
 
 def validate_data(data: pd.DataFrame) -> None:
     """Raise ValueError when required data-quality rules are violated."""
