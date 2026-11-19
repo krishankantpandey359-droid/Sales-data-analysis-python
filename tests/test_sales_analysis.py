@@ -33,3 +33,32 @@ def test_load_parses_dates_and_month(tmp_path):
     p=tmp_path/"tiny.csv"
     pd.DataFrame({"Store":[1],"Date":["05-02-2010"],"Weekly_Sales":[123],"Holiday_Flag":[0],"Temperature":[40],"Fuel_Price":[2.5],"CPI":[200],"Unemployment":[8]}).to_csv(p,index=False)
     r=load_data(p,download=False); assert r.loc[0,"Date"]==pd.Timestamp("2010-02-05") and r.loc[0,"Month"]=="2010-02"
+
+def test_missing_required_value_rejected(sample):
+    bad = sample.copy()
+    bad.loc[0, "Temperature"] = float("nan")
+    with pytest.raises(ValueError, match="Missing or invalid"):
+        validate_data(bad)
+
+
+def test_monthly_aggregation_rejects_invalid_date():
+    bad = pd.DataFrame({"Date": ["not-a-date"], "Weekly_Sales": [10]})
+    with pytest.raises(ValueError, match="invalid values"):
+        monthly_sales(bad)
+
+
+def test_monthly_aggregation_requires_month_or_date():
+    bad = pd.DataFrame({"Weekly_Sales": [10]})
+    with pytest.raises(ValueError, match="Month or Date"):
+        monthly_sales(bad)
+
+
+def test_invalid_date_rejected_on_load(tmp_path):
+    path = tmp_path / "invalid_date.csv"
+    pd.DataFrame({
+        "Store": [1], "Date": ["not-a-date"], "Weekly_Sales": [123],
+        "Holiday_Flag": [0], "Temperature": [40], "Fuel_Price": [2.5],
+        "CPI": [200], "Unemployment": [8],
+    }).to_csv(path, index=False)
+    with pytest.raises(ValueError, match="Missing or invalid"):
+        load_data(path, download=False)
