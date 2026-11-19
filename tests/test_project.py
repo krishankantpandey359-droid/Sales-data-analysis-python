@@ -95,3 +95,12 @@ def test_loader_rejects_empty_dataset(tmp_path):
 def test_loader_rejects_missing_file(tmp_path):
     with pytest.raises(FileNotFoundError, match="not found"):
         load_sales_data(tmp_path / "does-not-exist.csv")
+
+
+def test_daily_sales_and_product_region_breakdown():
+    frame = load_sales_data(DATA)
+    result = analyze_sales(frame)
+    assert result["daily_sales"].sum() == 205000
+    assert len(result["daily_sales"]) == 6
+    assert result["product_region_sales"].to_numpy().sum() == 205000
+    assert result["product_region_sales"].loc["Laptop", "North"] == 50000
