@@ -30,6 +30,23 @@ The script derives line sales as `Quantity * UnitPrice`. UnitPrice is recorded i
 
 The source does not provide product cost. This track does not calculate profit or profit margin. Do not confuse derived sales revenue with profit.
 
+The successful automated run on 20 November 2026 produced the following result from the downloaded source archive (SHA-256 is recorded in the artifact's `summary.json`):
+
+| Measure | Verified result |
+|---|---:|
+| Source invoice-line rows | 541,909 |
+| Included completed sales lines | 530,104 |
+| Excluded rows | 11,805 |
+| Invoices | 19,960 |
+| Identified customers | 4,338 |
+| Product codes | 3,922 |
+| Countries | 38 |
+| Derived sales | GBP 10,666,684.54 |
+| Included date range | 1 December 2010–9 December 2011 |
+| Included rows missing CustomerID | 132,220 |
+
+The exclusion counters in `summary.json` are diagnostic counts by condition and overlap; do not add them to calculate the total excluded rows. The report records the exact UTC retrieval time and archive hash for this run.
+
 ### Run the extended analysis
 
 Install dependencies:
