@@ -150,6 +150,7 @@ def summarize_online_retail(cleaned: pd.DataFrame) -> tuple[dict, dict[str, pd.D
         "source_url": UCI_DATASET_PAGE,
         "doi": UCI_DOI,
         "license": "Creative Commons Attribution 4.0 International (CC BY 4.0)",
+        "currency": "GBP (pounds sterling)",
         "source_description": (
             "Transactions from a UK-based non-store online retailer. "
             "Derived sales include positive-quantity, positive-unit-price invoice lines "
