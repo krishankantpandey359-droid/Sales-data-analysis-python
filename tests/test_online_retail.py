@@ -1,11 +1,15 @@
+from pathlib import Path
+import sys
+
 import pandas as pd
 import pytest
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
 
 from online_retail import clean_online_retail, summarize_online_retail
 
 
-def sample_data():
-    return pd.DataFrame({
         "InvoiceNo": ["10001", "10001", "C10002", "10003", "10004"],
         "StockCode": ["A", "B", "C", "D", "E"],
         "Description": ["Widget", "Cable", "Cancelled", "Return", "Free item"],
