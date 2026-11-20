@@ -1,107 +1,78 @@
 # Sales Data Analysis using Python
 
-## Project overview
+This repository contains two clearly separated exercises: the original six-row sales-summary exercise and an extended analysis of the UCI Online Retail transaction dataset.
 
-This project analyzes a small six-row sales dataset. It calculates total sales and profit, summarizes sales by region, product, date, and product-region combination, and creates a regional sales chart.
+## Track 1: Original six-row exercise
 
-The dataset is intentionally small. Treat the results as a coding and analysis demonstration, not as statistically representative business performance.
+The root-level `sales_data.csv` remains the small teaching example used by `project.py`. It contains six records and five fields: Date, Product, Region, Sales and Profit.
 
-## Dataset
+Verified sample totals: Sales 205,000 and Profit 33,000. These are totals for the six included rows only. The sample has no external dataset provenance and is not statistically representative.
 
-The included `sales_data.csv` contains six records and five columns:
-
-- `Date`
-- `Product`
-- `Region`
-- `Sales`
-- `Profit`
-
-The script validates the required columns, non-empty product and region labels, valid dates, and finite numeric sales/profit values before analysis.
-
-## Verified totals in the included dataset
-
-| Metric | Value |
-|---|---:|
-| Records | 6 |
-| Total sales | 205,000 |
-| Total profit | 33,000 |
-
-Sales by region:
-
-| Region | Sales |
-|---|---:|
-| North | 85,000 |
-| South | 55,000 |
-| West | 45,000 |
-| East | 20,000 |
-
-Sales by product:
-
-| Product | Sales |
-|---|---:|
-| Laptop | 95,000 |
-| Mobile | 65,000 |
-| Tablet | 45,000 |
-
-Daily sales and the product-region cross-tabulation are also available from the analysis function. These totals describe only the six rows in the included sample.
-
-## Project structure
-
-```text
-Sales-data-analysis-python/
-├── project.py
-├── sales_data.csv
-├── requirements.txt
-├── tests/
-│   └── test_project.py
-└── .github/
-    └── workflows/
-        └── tests.yml
-```
-
-## Setup and run
-
-Use Python 3.10 or newer.
-
-```bash
-python -m venv .venv
-```
-
-Activate the environment, then install dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
-Run the analysis:
+Run it with:
 
 ```bash
 python project.py
-```
-
-Use another CSV path:
-
-```bash
-python project.py --data path/to/your_sales.csv
-```
-
-Save the regional chart to a file:
-
-```bash
-python project.py --save-chart output/region-sales.png
-```
-
-## Run tests
-
-```bash
 pytest -q
 ```
 
-The tests check dataset totals, regional and product breakdowns, daily sales, product-region totals, headless script execution, missing columns, empty files, missing labels, invalid dates, non-numeric values, infinite values, and missing files.
+## Track 2: UCI Online Retail, 541,909 source records
 
-## Limitations and next steps
+The extended workflow downloads the original UCI Online Retail workbook at runtime. The source describes transactions from a UK-based non-store retailer between 1 December 2010 and 9 December 2011.
 
-- Six records are insufficient for reliable business forecasting or general conclusions.
-- The dataset has no customer, order, quantity, discount, or cost breakdown, so customer behaviour and margin drivers cannot be analyzed.
-- Profit is treated as a supplied field. The project does not independently validate its accounting definition.
-- Useful extensions include a larger time series, monthly trends, profit margin, product-region cross-tabulation, and data visualizations with clear units.
+- Dataset page: https://archive.ics.uci.edu/dataset/352/online+retail
+- Download archive: https://archive.ics.uci.edu/static/public/352/online+retail.zip
+- DOI: https://doi.org/10.24432/C5BW33
+- Creator: Daqing Chen
+- Licence: Creative Commons Attribution 4.0 International (CC BY 4.0)
+- Original source size: 541,909 invoice-line records
+
+The script derives line sales as `Quantity * UnitPrice`. UnitPrice is recorded in pounds sterling (GBP). It excludes cancellation invoices (InvoiceNo starting with C), non-positive quantities, non-positive unit prices, invalid dates and blank invoice numbers. Missing CustomerID records remain in overall sales totals but are not counted as identified customers.
+
+The source does not provide product cost. This track does not calculate profit or profit margin. Do not confuse derived sales revenue with profit.
+
+### Run the extended analysis
+
+Install dependencies:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+Run the downloader, cleaning and analysis:
+
+```bash
+python scripts/run_online_retail_analysis.py
+```
+
+The archive is cached under `data/raw/`. Reports are written to `outputs/online_retail/`:
+
+- `summary.json`: source, retrieval time, archive SHA-256, data-quality audit and headline measures.
+- `monthly_sales.csv`: monthly sales, invoices, lines and identified customers.
+- `country_sales.csv`: sales and invoice count by country.
+- `top_20_products.csv`: highest-revenue stock-code and product-description combinations.
+
+The original workbook is downloaded at runtime and is not committed to this repository. GitHub Actions performs the same download and uploads the generated reports as the `uci-online-retail-analysis` artifact.
+
+### Reproduce locally
+
+```bash
+pytest -q
+python scripts/run_online_retail_analysis.py
+```
+
+## Project limitations
+
+- The six-row file is retained only as a small coding example.
+- The UCI source is historical and represents one retailer, not the entire market.
+- Cancellations and negative or zero quantity/price lines are excluded from the completed-sales analysis.
+- Some invoice lines do not have CustomerID. They are retained for overall sales but excluded from the identified-customer count.
+- No cost field is supplied, so profit and margin are not available.
+- Sales are calculated in the dataset's GBP price units. No inflation adjustment or currency conversion is performed.
+
+## Technologies
+
+Python, Pandas, NumPy, Matplotlib, openpyxl, pytest and GitHub Actions.
+
+## Attribution
+
+Chen, D. (2015). Online Retail [Dataset]. UCI Machine Learning Repository. https://doi.org/10.24432/C5BW33. Licensed under CC BY 4.0.
