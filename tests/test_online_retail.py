@@ -10,16 +10,19 @@ sys.path.insert(0, str(ROOT / "src"))
 from online_retail import clean_online_retail, summarize_online_retail
 
 
+def sample_data():
+    return pd.DataFrame({
         "InvoiceNo": ["10001", "10001", "C10002", "10003", "10004"],
         "StockCode": ["A", "B", "C", "D", "E"],
         "Description": ["Widget", "Cable", "Cancelled", "Return", "Free item"],
         "Quantity": [2, 1, 1, -1, 3],
-        "InvoiceDate": ["01/12/2010 08:30", "01/12/2010 08:31",
-                        "01/12/2010 09:00", "02/12/2010 10:00", "03/12/2010 11:00"],
+        "InvoiceDate": [
+            "01/12/2010 08:30", "01/12/2010 08:31",
+            "01/12/2010 09:00", "02/12/2010 10:00", "03/12/2010 11:00",
+        ],
         "UnitPrice": [10.0, 5.0, 10.0, 5.0, 0.0],
         "CustomerID": [12345, None, 12345, 99999, 99999],
-        "Country": ["United Kingdom", "United Kingdom", "United Kingdom",
-                    "France", "France"],
+        "Country": ["United Kingdom", "United Kingdom", "United Kingdom", "France", "France"],
     })
 
 
