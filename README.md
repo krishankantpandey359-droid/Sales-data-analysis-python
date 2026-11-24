@@ -93,3 +93,8 @@ Python, Pandas, NumPy, Matplotlib, openpyxl, pytest and GitHub Actions.
 ## Attribution
 
 Chen, D. (2015). Online Retail [Dataset]. UCI Machine Learning Repository. https://doi.org/10.24432/C5BW33. Licensed under CC BY 4.0.
+
+
+## Latest GitHub Actions validation
+
+Latest verified successful main-branch workflow run checked on 24 November 2026: [GitHub Actions run #45311820839](https://github.com/krishankantpandey359-droid/Sales-data-analysis-python/actions/runs/45311820839). This run verifies the checks configured in this repository's workflow; it does not replace manual testing of features outside CI.
