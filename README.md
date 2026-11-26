@@ -97,4 +97,4 @@ Chen, D. (2015). Online Retail [Dataset]. UCI Machine Learning Repository. https
 
 ## Latest GitHub Actions validation
 
-Latest verified successful main-branch workflow run checked on 24 November 2026: [GitHub Actions run #45313143312](https://github.com/krishankantpandey359-droid/Sales-data-analysis-python/actions/runs/45313143312). This run verifies the checks configured in this repository's workflow; it does not replace manual testing of features outside CI.
+Latest verified successful main-branch workflow run checked on 26 November 2026: [GitHub Actions run #45795412690](https://github.com/krishankantpandey359-droid/Sales-data-analysis-python/actions/runs/45795412690). This run verifies the checks configured in this repository's workflow; it does not replace manual testing of features outside CI.
